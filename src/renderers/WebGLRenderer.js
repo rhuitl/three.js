@@ -4676,14 +4676,6 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 				if ( !texture ) continue;
 
-				if( new Date().getTime() >= _startTime + _this.timeBudget ) {
-
-					//console.debug("time budget exhausted");
-					continue;
-
-				}
-
-
 				if ( texture.image instanceof Array && texture.image.length === 6 ) {
 
 					setCubeTexture( texture, value );
@@ -5414,21 +5406,25 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 			setTextureParameters( _gl.TEXTURE_2D, texture, isImagePowerOfTwo );
 
-			if ( texture instanceof THREE.DataTexture ) {
+			if( new Date().getTime() < _startTime + _this.timeBudget ) {
 
-				_gl.texImage2D( _gl.TEXTURE_2D, 0, glFormat, image.width, image.height, 0, glFormat, glType, image.data );
+				if ( texture instanceof THREE.DataTexture ) {
 
-			} else {
+					_gl.texImage2D( _gl.TEXTURE_2D, 0, glFormat, image.width, image.height, 0, glFormat, glType, image.data );
 
-				_gl.texImage2D( _gl.TEXTURE_2D, 0, glFormat, glFormat, glType, texture.image );
+				} else {
+
+					_gl.texImage2D( _gl.TEXTURE_2D, 0, glFormat, glFormat, glType, texture.image );
+
+				}
+
+				if ( texture.generateMipmaps && isImagePowerOfTwo ) _gl.generateMipmap( _gl.TEXTURE_2D );
+
+				texture.needsUpdate = false;
+
+				if ( texture.onUpdated ) texture.onUpdated();
 
 			}
-
-			if ( texture.generateMipmaps && isImagePowerOfTwo ) _gl.generateMipmap( _gl.TEXTURE_2D );
-
-			texture.needsUpdate = false;
-
-			if ( texture.onUpdated ) texture.onUpdated();
 			//console.debug("Uploading texture " + slot + " took " + (new Date().getTime()-start) + " ms");
 			
 		} else {
