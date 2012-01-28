@@ -30,7 +30,8 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 	this.domElement = _canvas;
 	this.context = null;
-
+	this.timeBudget = parameters.timeBudget !== undefined ? parameters.timeBudget : Number.POSITIVE_INFINITY;
+	
 	// clearing
 
 	this.autoClear = true;
@@ -110,6 +111,7 @@ THREE.WebGLRenderer = function ( parameters ) {
 	_currentGeometryGroupHash = null,
 	_currentCamera = null,
 	_geometryGroupCounter = 0,
+	_startTime = 0,
 
 	// GL state cache
 
@@ -3120,6 +3122,8 @@ THREE.WebGLRenderer = function ( parameters ) {
 		fog = scene.fog;
 
 		_currentMaterialId = -1;
+		
+		_startTime = new Date().getTime();
 
 		if ( this.autoUpdateObjects ) this.initWebGLObjects( scene );
 
@@ -4672,6 +4676,14 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 				if ( !texture ) continue;
 
+				if( new Date().getTime() >= _startTime + _this.timeBudget ) {
+
+					//console.debug("time budget exhausted");
+					continue;
+
+				}
+
+
 				if ( texture.image instanceof Array && texture.image.length === 6 ) {
 
 					setCubeTexture( texture, value );
@@ -4681,9 +4693,7 @@ THREE.WebGLRenderer = function ( parameters ) {
 					setCubeTextureDynamic( texture, value );
 
 				} else {
-
 					_this.setTexture( texture, value );
-
 				}
 
 			// single THREE.Texture where 1st channel is used for alpha
@@ -5383,7 +5393,8 @@ THREE.WebGLRenderer = function ( parameters ) {
 	this.setTexture = function ( texture, slot ) {
 
 		if ( texture.needsUpdate ) {
-
+			//var start = new Date().getTime();
+			
 			if ( ! texture.__webglInit ) {
 
 				texture.__webglInit = true;
@@ -5418,7 +5429,8 @@ THREE.WebGLRenderer = function ( parameters ) {
 			texture.needsUpdate = false;
 
 			if ( texture.onUpdated ) texture.onUpdated();
-
+			//console.debug("Uploading texture " + slot + " took " + (new Date().getTime()-start) + " ms");
+			
 		} else {
 
 			_gl.activeTexture( _gl.TEXTURE0 + slot );
