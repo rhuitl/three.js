@@ -14,7 +14,7 @@ THREE.ImageUtils = {
 		var image = new Image(), texture = new THREE.Texture( image, mapping,
 			undefined, undefined, undefined, undefined, format );
 
-		image.onload = function () { texture.needsUpdate = true; if ( callback ) callback( this ); };
+		image.onload = function () { texture.needsUpdate = true; if ( callback ) callback( this, texture ); };
 		image.crossOrigin = this.crossOrigin;
 		image.src = path;
 
