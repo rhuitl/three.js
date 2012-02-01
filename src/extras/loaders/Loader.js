@@ -175,7 +175,7 @@ THREE.Loader.prototype = {
 
 			}
 
-			load_image( where[ name ], texture_path + "/" + sourceFile );
+			load_image( where[ name ], texture_path !== "" ? texture_path + "/" + sourceFile : sourceFile);
 
 		}
 
