@@ -52,6 +52,7 @@ COMMON_FILES = [
 'materials/MeshFaceMaterial.js',
 'materials/MeshShaderMaterial.js',
 'materials/ParticleBasicMaterial.js',
+'materials/ParticleCustomMaterial.js',
 'materials/ParticleCanvasMaterial.js',
 'materials/ParticleDOMMaterial.js',
 'materials/ShaderMaterial.js',

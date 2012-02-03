@@ -4019,6 +4019,10 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 			shaderID = 'basic';
 
+		} else if ( material instanceof THREE.ParticleCustomMaterial ) {
+
+			shaderID = 'particle_custom';
+
 		} else if ( material instanceof THREE.ParticleBasicMaterial ) {
 
 			shaderID = 'particle_basic';

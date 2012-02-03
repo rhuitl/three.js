@@ -1511,6 +1511,69 @@ THREE.ShaderLib = {
 
 	},
 
+	'particle_custom': {
+
+		uniforms:  THREE.UniformsUtils.merge( [
+
+			THREE.UniformsLib[ "particle" ],
+			THREE.UniformsLib[ "shadowmap" ]
+
+		] ),
+
+		vertexShader: [
+
+			"uniform float scale;",
+			"attribute float size;",
+
+			THREE.ShaderChunk[ "color_pars_vertex" ],
+			THREE.ShaderChunk[ "shadowmap_pars_vertex" ],
+
+			"void main() {",
+
+				THREE.ShaderChunk[ "color_vertex" ],
+
+				"vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
+
+				"#ifdef USE_SIZEATTENUATION",
+					"gl_PointSize = size * ( scale / length( mvPosition.xyz ) );",
+				"#else",
+					"gl_PointSize = size;",
+				"#endif",
+
+				"gl_Position = projectionMatrix * mvPosition;",
+
+				THREE.ShaderChunk[ "shadowmap_vertex" ],
+
+			"}"
+
+		].join("\n"),
+
+		fragmentShader: [
+
+			"uniform vec3 psColor;",
+			"uniform float opacity;",
+
+			THREE.ShaderChunk[ "color_pars_fragment" ],
+			THREE.ShaderChunk[ "map_particle_pars_fragment" ],
+			THREE.ShaderChunk[ "fog_pars_fragment" ],
+			THREE.ShaderChunk[ "shadowmap_pars_fragment" ],
+
+			"void main() {",
+
+				"gl_FragColor = vec4( psColor, opacity );",
+
+				THREE.ShaderChunk[ "map_particle_fragment" ],
+				THREE.ShaderChunk[ "alphatest_fragment" ],
+				THREE.ShaderChunk[ "color_fragment" ],
+				THREE.ShaderChunk[ "shadowmap_fragment" ],
+				THREE.ShaderChunk[ "fog_fragment" ],
+
+			"}"
+
+		].join("\n")
+
+	},
+
 	// Depth encoding into RGBA texture
 	// 	based on SpiderGL shadow map example
 	// 		http://spidergl.org/example.php?id=6
