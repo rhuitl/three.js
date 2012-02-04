@@ -4377,6 +4377,8 @@ THREE.WebGLRenderer = function ( parameters ) {
 		uniforms.opacity.value = material.opacity;
 		uniforms.size.value = material.size;
 		uniforms.scale.value = _canvas.height / 2.0; // TODO: Cache this.
+		if(material.angle2pixels !== undefined)
+			uniforms.angle2pixels.value = material.angle2pixels;
 
 		uniforms.map.texture = material.map;
 

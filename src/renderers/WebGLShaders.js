@@ -1089,8 +1089,9 @@ THREE.UniformsLib = {
 		"fogDensity" : { type: "f", value: 0.00025 },
 		"fogNear" : { type: "f", value: 1 },
 		"fogFar" : { type: "f", value: 2000 },
-		"fogColor" : { type: "c", value: new THREE.Color( 0xffffff ) }
+		"fogColor" : { type: "c", value: new THREE.Color( 0xffffff ) },
 
+		"angle2pixels" : { type: "f", value: 10.0 }
 	},
 
 	shadowmap: {
@@ -1523,6 +1524,7 @@ THREE.ShaderLib = {
 		vertexShader: [
 
 			"uniform float scale;",
+			"uniform float angle2pixels;",
 			"attribute float size;",
 
 			THREE.ShaderChunk[ "color_pars_vertex" ],
@@ -1535,9 +1537,9 @@ THREE.ShaderLib = {
 				"vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
 
 				"#ifdef USE_SIZEATTENUATION",
-					"gl_PointSize = size * ( scale / length( mvPosition.xyz ) );",
+					"gl_PointSize = asin(size / length(mvPosition.xyz)) * angle2pixels;",
 				"#else",
-					"gl_PointSize = size;",
+					"gl_PointSize = asin(size) * angle2pixels;",
 				"#endif",
 
 				"gl_Position = projectionMatrix * mvPosition;",
