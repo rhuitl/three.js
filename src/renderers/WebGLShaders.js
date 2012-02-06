@@ -1576,6 +1576,87 @@ THREE.ShaderLib = {
 
 	},
 
+	'pointcloud': {
+
+		uniforms:  THREE.UniformsUtils.merge( [
+
+			THREE.UniformsLib[ "particle" ],
+			THREE.UniformsLib[ "shadowmap" ]
+
+		] ),
+
+		vertexShader: [
+
+			"uniform float size;",
+			"uniform float scale;",
+			"uniform float angle2pixels;",
+
+			//THREE.ShaderChunk[ "color_pars_vertex" ],
+			"varying vec4 vColor;",
+
+			THREE.ShaderChunk[ "shadowmap_pars_vertex" ],
+
+			"vec3 hue2rgb(float hue) {",
+
+				"float r = abs(hue * 6. - 3.) - 1.;",
+				"float g = 2. - abs(hue * 6. - 2.);",
+				"float b = 2. - abs(hue * 6. - 4.);",
+				"return clamp(vec3(r,g,b), 0., 1.);",
+
+			"}",
+
+			"void main() {",
+
+				//THREE.ShaderChunk[ "color_vertex" ],
+				"float z_max = 13., z_min = 2.;",
+				"float t = (position.z - z_min) / (z_max-z_min);",
+				"float hue = mod((1.-t)*(240./255.), 360.);",
+				"vColor = vec4(hue2rgb(hue),1.);",
+
+				"vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
+
+				"#ifdef USE_SIZEATTENUATION",
+				"gl_PointSize = asin(size / length(mvPosition.xyz)) * angle2pixels;",
+				"#else",
+				"gl_PointSize = asin(size) * angle2pixels;",
+				"#endif",
+
+				"gl_Position = projectionMatrix * mvPosition;",
+
+				THREE.ShaderChunk[ "shadowmap_vertex" ],
+
+			"}"
+
+		].join("\n"),
+
+		fragmentShader: [
+
+			"uniform vec3 psColor;",
+			"uniform float opacity;",
+
+			//THREE.ShaderChunk[ "color_pars_fragment" ],
+			"varying vec4 vColor;",
+
+			THREE.ShaderChunk[ "map_particle_pars_fragment" ],
+			THREE.ShaderChunk[ "fog_pars_fragment" ],
+			THREE.ShaderChunk[ "shadowmap_pars_fragment" ],
+
+			"void main() {",
+
+				"gl_FragColor = vColor;",
+
+				THREE.ShaderChunk[ "map_particle_fragment" ],
+				THREE.ShaderChunk[ "alphatest_fragment" ],
+				//THREE.ShaderChunk[ "color_fragment" ],
+				THREE.ShaderChunk[ "shadowmap_fragment" ],
+				THREE.ShaderChunk[ "fog_fragment" ],
+
+			"}"
+
+		].join("\n")
+
+	},
+
 	// Depth encoding into RGBA texture
 	// 	based on SpiderGL shadow map example
 	// 		http://spidergl.org/example.php?id=6

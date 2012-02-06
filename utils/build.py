@@ -55,6 +55,7 @@ COMMON_FILES = [
 'materials/ParticleCustomMaterial.js',
 'materials/ParticleCanvasMaterial.js',
 'materials/ParticleDOMMaterial.js',
+'materials/PointCloudMaterial.js',
 'materials/ShaderMaterial.js',
 'textures/Texture.js',
 'textures/DataTexture.js',

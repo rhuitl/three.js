@@ -4027,6 +4027,10 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 			shaderID = 'particle_basic';
 
+		} else if ( material instanceof THREE.PointCloudMaterial ) {
+
+			shaderID = 'pointcloud';
+
 		}
 
 		if ( shaderID ) {
@@ -4225,6 +4229,10 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 				refreshUniformsParticle( m_uniforms, material );
 
+			} else if ( material instanceof THREE.PointCloudMaterial ) {
+
+				refreshUniformsParticle( m_uniforms, material );
+
 			} else if ( material instanceof THREE.MeshPhongMaterial ) {
 
 				refreshUniformsPhong( m_uniforms, material );
@@ -4361,7 +4369,6 @@ THREE.WebGLRenderer = function ( parameters ) {
 		uniforms.refractionRatio.value = material.refractionRatio;
 		uniforms.combine.value = material.combine;
 		uniforms.useRefract.value = material.envMap && material.envMap.mapping instanceof THREE.CubeRefractionMapping;
-
 	};
 
 	function refreshUniformsLine ( uniforms, material ) {
@@ -4377,10 +4384,14 @@ THREE.WebGLRenderer = function ( parameters ) {
 		uniforms.opacity.value = material.opacity;
 		uniforms.size.value = material.size;
 		uniforms.scale.value = _canvas.height / 2.0; // TODO: Cache this.
-		if(material.angle2pixels !== undefined)
-			uniforms.angle2pixels.value = material.angle2pixels;
 
 		uniforms.map.texture = material.map;
+
+		if ( material.angle2pixels !== undefined ) {
+			
+			uniforms.angle2pixels.value = material.angle2pixels;
+			
+		}
 
 	};
 
@@ -4501,7 +4512,6 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 
 	function loadUniformsMatrices ( uniforms, object ) {
-
 		_gl.uniformMatrix4fv( uniforms.modelViewMatrix, false, object._modelViewMatrixArray );
 
 		if ( uniforms.normalMatrix ) {
