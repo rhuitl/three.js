@@ -3167,18 +3167,17 @@ THREE.WebGLRenderer = function ( parameters ) {
 		// set matrices for regular objects (frustum culled)
 
 		renderList = scene.__webglObjects;
-
 		for ( i = 0, il = renderList.length; i < il; i ++ ) {
 
 			webglObject = renderList[ i ];
 			object = webglObject.object;
 
 			webglObject.render = false;
+			webglObject.z = 0;         // undefined (invisible objects) breaks sort
 
 			if ( object.visible ) {
 
 				if ( ! ( object instanceof THREE.Mesh || object instanceof THREE.ParticleSystem ) || ! ( object.frustumCulled ) || _frustum.contains( object ) ) {
-
 					object.matrixWorld.flattenToArray( object._objectMatrixArray );
 
 					setupMatrices( object, camera );
