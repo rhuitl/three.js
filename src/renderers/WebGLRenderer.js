@@ -3188,7 +3188,7 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 					if ( this.sortObjects ) {
 
-						if ( object.renderDepth ) {
+						if ( object.renderDepth !== null ) {
 
 							webglObject.z = object.renderDepth;
 
