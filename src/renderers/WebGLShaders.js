@@ -1590,6 +1590,7 @@ THREE.ShaderLib = {
 			"uniform float size;",
 			"uniform float scale;",
 			"uniform float angle2pixels;",
+			"uniform float opacity;",
 
 			//THREE.ShaderChunk[ "color_pars_vertex" ],
 			"varying vec4 vColor;",
@@ -1611,7 +1612,7 @@ THREE.ShaderLib = {
 				"float z_max = 13., z_min = 2.;",
 				"float t = (position.z - z_min) / (z_max-z_min);",
 				"float hue = mod((1.-t)*(240./255.), 360.);",
-				"vColor = vec4(hue2rgb(hue),1.);",
+				"vColor = vec4(hue2rgb(hue), opacity);",
 
 				"vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
 
