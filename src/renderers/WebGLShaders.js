@@ -1091,7 +1091,10 @@ THREE.UniformsLib = {
 		"fogFar" : { type: "f", value: 2000 },
 		"fogColor" : { type: "c", value: new THREE.Color( 0xffffff ) },
 
-		"angle2pixels" : { type: "f", value: 10.0 }
+		"angle2pixels" : { type: "f", value: 10.0 },
+		"zMin" : { type: "f", value: 0.0 },
+		"zMax" : { type: "f", value: 10.0 },
+		"hueOffset" : { type: "f", value: 0.5 }
 	},
 
 	shadowmap: {
@@ -1591,8 +1594,8 @@ THREE.ShaderLib = {
 			"uniform float scale;",
 			"uniform float angle2pixels;",
 			"uniform float opacity;",
+			"uniform float zMin, zMax, hueOffset;",
 
-			//THREE.ShaderChunk[ "color_pars_vertex" ],
 			"varying vec4 vColor;",
 
 			THREE.ShaderChunk[ "shadowmap_pars_vertex" ],
@@ -1608,14 +1611,18 @@ THREE.ShaderLib = {
 
 			"void main() {",
 
-				//THREE.ShaderChunk[ "color_vertex" ],
-				"float z_max = 13., z_min = 2.;",
-				"float t = (position.z - z_min) / (z_max-z_min);",
-				"float hue = mod((1.-t)*(240./255.), 360.);",
+				"vec4 position4 = vec4( position, 1.0 );",
+
+				// Compute color
+				"vec4 mwPosition = objectMatrix * position4;",
+				"float t = (mwPosition.z - zMin) / (zMax-zMin);",
+				"float hue = mod((1.-t) * hueOffset, 1.);",
 				"vColor = vec4(hue2rgb(hue), opacity);",
 
-				"vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
+				// Compute view coordinates
+				"vec4 mvPosition = modelViewMatrix * position4;",
 
+				// Compute point size
 				"#ifdef USE_SIZEATTENUATION",
 				"gl_PointSize = asin(size / length(mvPosition.xyz)) * angle2pixels;",
 				"#else",
@@ -1635,7 +1642,6 @@ THREE.ShaderLib = {
 			"uniform vec3 psColor;",
 			"uniform float opacity;",
 
-			//THREE.ShaderChunk[ "color_pars_fragment" ],
 			"varying vec4 vColor;",
 
 			THREE.ShaderChunk[ "map_particle_pars_fragment" ],
@@ -1648,7 +1654,6 @@ THREE.ShaderLib = {
 
 				THREE.ShaderChunk[ "map_particle_fragment" ],
 				THREE.ShaderChunk[ "alphatest_fragment" ],
-				//THREE.ShaderChunk[ "color_fragment" ],
 				THREE.ShaderChunk[ "shadowmap_fragment" ],
 				THREE.ShaderChunk[ "fog_fragment" ],
 

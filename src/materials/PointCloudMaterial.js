@@ -35,6 +35,10 @@ THREE.PointCloudMaterial = function ( parameters ) {
 
 	this.fog = parameters.fog !== undefined ? parameters.fog : true;
 
+	this.zMin = parameters.zMin !== undefined ? parameters.zMin : 0;
+	this.zMax = parameters.zMax !== undefined ? parameters.zMax : 10;
+	this.hueOffset = parameters.hueOffset !== undefined ? parameters.hueOffset : 0.5;
+
 };
 
 THREE.PointCloudMaterial.prototype = new THREE.Material();

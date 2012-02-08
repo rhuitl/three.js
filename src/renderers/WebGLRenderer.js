@@ -4301,6 +4301,7 @@ THREE.WebGLRenderer = function ( parameters ) {
 		loadUniformsMatrices( p_uniforms, object );
 
 		if ( material instanceof THREE.ShaderMaterial ||
+			 material instanceof THREE.PointCloudMaterial ||
 			 material.envMap ||
 			 material.skinning ||
 			 object.receiveShadow ) {
@@ -4386,11 +4387,14 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 		uniforms.map.texture = material.map;
 
-		if ( material.angle2pixels !== undefined ) {
-			
+		if ( material.angle2pixels !== undefined )
 			uniforms.angle2pixels.value = material.angle2pixels;
-			
-		}
+		if ( material.zMin !== undefined )
+			uniforms.zMin.value = material.zMin;
+		if ( material.zMax !== undefined )
+			uniforms.zMax.value = material.zMax;
+		if ( material.hueOffset !== undefined )
+			uniforms.hueOffset.value = material.hueOffset;
 
 	};
 
