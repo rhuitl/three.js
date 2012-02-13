@@ -3887,21 +3887,26 @@ THREE.WebGLRenderer = function ( parameters ) {
 			material.attributes && clearCustomAttributes( material );
 
 		} else if ( object instanceof THREE.ParticleSystem ) {
+			
+			if( new Date().getTime() < _startTime + _this.timeBudget ) {
 
-			material = getBufferMaterial( object, geometryGroup );
-
-			customAttributesDirty = material.attributes && areCustomAttributesDirty( material );
-
-			if ( geometry.__dirtyVertices || geometry.__dirtyColors || object.sortParticles || customAttributesDirty ) {
-
-				setParticleBuffers( geometry, _gl.DYNAMIC_DRAW, object );
-
-			}
-
-			geometry.__dirtyVertices = false;
-			geometry.__dirtyColors = false;
-
-			material.attributes && clearCustomAttributes( material );
+				material = getBufferMaterial( object, geometryGroup );
+	
+				customAttributesDirty = material.attributes && areCustomAttributesDirty( material );
+	
+				if ( geometry.__dirtyVertices || geometry.__dirtyColors || object.sortParticles || customAttributesDirty ) {
+	
+					setParticleBuffers( geometry, _gl.DYNAMIC_DRAW, object );
+	
+				}
+	
+				geometry.__dirtyVertices = false;
+				geometry.__dirtyColors = false;
+	
+				material.attributes && clearCustomAttributes( material );
+				
+			} else 
+				console.log("timeout");
 
 		}
 
