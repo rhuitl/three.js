@@ -30,6 +30,7 @@ THREE.PointCloudMaterial = function ( parameters ) {
 
 	this.size = parameters.size !== undefined ? parameters.size : 1;
 	this.sizeAttenuation = parameters.sizeAttenuation !== undefined ? parameters.sizeAttenuation : true;
+	this.alphaAttenuation = parameters.alphaAttenuation !== undefined ? parameters.alphaAttenuation : 1e6;
 
 	this.vertexColors = parameters.vertexColors !== undefined ? parameters.vertexColors : false;
 

@@ -4400,7 +4400,8 @@ THREE.WebGLRenderer = function ( parameters ) {
 			uniforms.zMax.value = material.zMax;
 		if ( material.hueOffset !== undefined )
 			uniforms.hueOffset.value = material.hueOffset;
-
+		if ( material.alphaAttenuation !== undefined )
+			uniforms.alphaAttenuation.value = material.alphaAttenuation;
 	};
 
 	function refreshUniformsFog ( uniforms, fog ) {

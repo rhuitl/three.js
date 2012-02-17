@@ -1094,7 +1094,8 @@ THREE.UniformsLib = {
 		"angle2pixels" : { type: "f", value: 10.0 },
 		"zMin" : { type: "f", value: 0.0 },
 		"zMax" : { type: "f", value: 10.0 },
-		"hueOffset" : { type: "f", value: 0.5 }
+		"hueOffset" : { type: "f", value: 0.5 },
+		"alphaAttenuation" : { type: "f", value: 1e6 }
 	},
 
 	shadowmap: {
@@ -1594,7 +1595,7 @@ THREE.ShaderLib = {
 			"uniform float scale;",
 			"uniform float angle2pixels;",
 			"uniform float opacity;",
-			"uniform float zMin, zMax, hueOffset;",
+			"uniform float zMin, zMax, hueOffset, alphaAttenuation;",
 
 			"varying vec4 vColor;",
 
@@ -1613,14 +1614,15 @@ THREE.ShaderLib = {
 
 				"vec4 position4 = vec4( position, 1.0 );",
 
+				// Compute view coordinates
+				"vec4 mvPosition = modelViewMatrix * position4;",
+
 				// Compute color
 				"vec4 mwPosition = objectMatrix * position4;",
 				"float t = (mwPosition.z - zMin) / (zMax-zMin);",
 				"float hue = mod((1.-t) * hueOffset, 1.);",
-				"vColor = vec4(hue2rgb(hue), opacity);",
-
-				// Compute view coordinates
-				"vec4 mvPosition = modelViewMatrix * position4;",
+				"float o = opacity * exp(- length(mvPosition.xyz) / alphaAttenuation);",
+				"vColor = vec4(hue2rgb(hue), o);",
 
 				// Compute point size
 				"#ifdef USE_SIZEATTENUATION",
@@ -1640,7 +1642,7 @@ THREE.ShaderLib = {
 		fragmentShader: [
 
 			"uniform vec3 psColor;",
-			"uniform float opacity;",
+			//"uniform float opacity;",
 
 			"varying vec4 vColor;",
 
