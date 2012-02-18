@@ -2993,7 +2993,9 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 		// render particles
 
-		} else if ( object instanceof THREE.ParticleSystem ) {
+		} else if ( object instanceof THREE.ParticleSystem && !object.geometry.__dirtyVertices ) {
+
+			// dirty vertices == time budget prevented upload, so don't render
 
 			_gl.drawArrays( _gl.POINTS, 0, geometryGroup.__webglParticleCount );
 
