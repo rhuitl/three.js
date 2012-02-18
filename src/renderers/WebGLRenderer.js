@@ -3199,6 +3199,20 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 							webglObject.z = _vector3.z;
 
+							if ( object.distanceCulled ) {
+
+								// Hack in culling because frustum far plane doesn't work...
+								var dist = Math.sqrt(
+									Math.pow( object.matrixWorld.n14 - camera.matrixWorld.n14, 2 ) +
+									Math.pow( object.matrixWorld.n24 - camera.matrixWorld.n24, 2 ) +
+									Math.pow( object.matrixWorld.n34 - camera.matrixWorld.n34, 2 ) );
+
+								if ( dist >= camera.far )
+
+									webglObject.render = false;
+
+							}
+
 						}
 
 					}
