@@ -9,6 +9,9 @@ THREE.ShaderFlares = {
 
 		vertexShader: [
 
+                        "precision mediump float;",
+                        "precision mediump int;",
+
 			"uniform vec3 screenPosition;",
 			"uniform vec2 scale;",
 			"uniform float rotation;",
@@ -59,6 +62,7 @@ THREE.ShaderFlares = {
 		fragmentShader: [
 
 			"precision mediump float;",
+                        "precision mediump int;",
 
 			"uniform sampler2D map;",
 			"uniform float opacity;",

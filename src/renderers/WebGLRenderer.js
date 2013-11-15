@@ -5156,6 +5156,8 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 		var prefix_vertex = [
 
+			"precision " + _precision + " float;",
+
 			( _maxVertexTextures > 0 ) ? "#define VERTEX_TEXTURES" : "",
 
 			_this.gammaInput ? "#define GAMMA_INPUT" : "",
